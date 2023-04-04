@@ -17,3 +17,13 @@ export function getNpmVersion(objectField?: string): { [k: string]: string } | s
     }
     return { version };
 }
+
+export function getNodeEnv(): string {
+    const { NODE_ENV } = process.env;
+
+    if (!NODE_ENV) {
+        return "DEV";
+    }
+
+    return NODE_ENV.toUpperCase();
+}

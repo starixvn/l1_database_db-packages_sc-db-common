@@ -1,4 +1,4 @@
-import { getNpmVersion } from "../src";
+import { getNodeEnv, getNpmVersion } from "../src";
 
 describe("[function getNpmVersion]", () => {
     const envBackup = { ...process.env };
@@ -55,6 +55,48 @@ describe("[function getNpmVersion]", () => {
                 expect(getNpmVersion(input)).toEqual({ [input]: output })
             }
             expect(getNpmVersion("")).toEqual({ version: output });
+        }
+    })
+
+    process.env = envBackup;
+});
+
+describe("[function getNpmVersion]", () => {
+    const envBackup = { ...process.env };
+
+    it("Non-existing NODE_ENV", () => {
+        const testCases = [
+            undefined,
+            "",
+        ];
+
+        for (const test of testCases) {
+            process.env.NODE_ENV = test;
+            expect(getNodeEnv()).toEqual("DEV");
+        }
+
+        delete process.env.NODE_ENV;
+        expect(getNodeEnv()).toEqual("DEV");
+    });
+
+    it("Existing NODE_ENV", () => {
+        const testCases: [string, string][] = [
+            ["dev", "DEV"],
+            ["development", "DEVELOPMENT"],
+            ["DEV", "DEV"],
+            ["TEST", "TEST"],
+            ["igt", "IGT"],
+            ["local-1", "LOCAL-1"],
+            ["sit", "SIT"],
+            ["uat", "UAT"],
+            ["PROD", "PROD"],
+            ["production", "PRODUCTION"],
+            ["111", "111"],
+        ];
+
+        for (const [env, output] of testCases) {
+            process.env.NODE_ENV = env;
+            expect(getNodeEnv()).toEqual(output);
         }
     })
 
