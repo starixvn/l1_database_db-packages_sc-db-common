@@ -1,0 +1,1 @@
+export { getNpmVersion } from "./env";
