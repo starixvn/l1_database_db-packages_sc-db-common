@@ -65,7 +65,7 @@ export class Watcher extends TypedEventEmitter<WatcherEvents> {
                 this.emit(Watcher.ERROR, new Error(String(error)));
             }
         } finally {
-            if (!this.changeStream.closed) {
+            if (this.changeStream.closed) {
                 throw new Error(`Error while resume change stream on [${[db, collection].filter(Boolean).join(".")}]`);
             }
         }
