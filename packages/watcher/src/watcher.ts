@@ -30,7 +30,6 @@ export class Watcher extends TypedEventEmitter<WatcherEvents> {
     }
 
     attachEvents() {
-        this.changeStream.removeAllListeners();
         this.changeStream.on(ChangeStream.CHANGE, this.handleChangeStreamChange.bind(this));
         this.changeStream.on(ChangeStream.ERROR, this.handleChangeStreamError.bind(this));
         this.changeStream.once(ChangeStream.CLOSE, this.handleChangeStreamClosed.bind(this));
