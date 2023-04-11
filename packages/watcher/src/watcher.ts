@@ -27,6 +27,8 @@ export class Watcher extends TypedEventEmitter<WatcherEvents> {
 
         this.changeStream = changeStream;
         this.attachEvents();
+
+        console.log(changeStream.namespace, changeStream);
     }
 
     attachEvents() {
