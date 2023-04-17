@@ -1,5 +1,5 @@
 import { TypedEventEmitter } from "@ldb/types";
-import { ChangeStream, ChangeStreamDocument, Collection, Db, Document, MongoClient } from "mongodb";
+import { ChangeStream, ChangeStreamDocument, ChangeStreamEvents, Collection, Db, Document, MongoClient } from "mongodb";
 import { CHANGE, ERROR, NOTIFY } from "./constants";
 
 type WatcherEvents = {
@@ -14,6 +14,10 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
     static readonly NOTIFY = NOTIFY;
 
     changeStream: ChangeStream<TSchema>;
+
+    private handleChangeBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.CHANGE];
+    private handleErrorBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.ERROR];
+    private handleCloseBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.CLOSE];
 
     get parent(): MongoClient | Db | Collection<TSchema> {
         const parent = this.changeStream.parent;
@@ -30,15 +34,19 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
 
     constructor(changeStream: ChangeStream<TSchema>) {
         super();
-
         this.changeStream = changeStream;
+
+        this.handleChangeBound = this.handleChangeStreamChange.bind(this);
+        this.handleErrorBound = this.handleChangeStreamError.bind(this);
+        this.handleCloseBound = this.handleChangeStreamClosed.bind(this);
+
         this.attachEvents();
     }
 
     attachEvents() {
-        this.changeStream.on(ChangeStream.CHANGE, this.handleChangeStreamChange.bind(this));
-        this.changeStream.on(ChangeStream.ERROR, this.handleChangeStreamError.bind(this));
-        this.changeStream.once(ChangeStream.CLOSE, this.handleChangeStreamClosed.bind(this));
+        this.changeStream.on(ChangeStream.CHANGE, this.handleChangeBound);
+        this.changeStream.on(ChangeStream.ERROR, this.handleErrorBound);
+        this.changeStream.once(ChangeStream.CLOSE, this.handleCloseBound);
     }
 
     handleChangeStreamChange(data: ChangeStreamDocument<TSchema>) {
