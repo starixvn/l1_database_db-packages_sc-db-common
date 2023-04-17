@@ -60,7 +60,7 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private transformFullDocument(document: TSchema) {
+    protected transformFullDocument(document: TSchema) {
         return;
     }
 
