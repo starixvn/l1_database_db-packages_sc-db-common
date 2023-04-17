@@ -1,13 +1,15 @@
-/* eslint-disable camelcase */
+const EmptyString = "" as const;
+
 export function getNpmVersion(): string | undefined;
-export function getNpmVersion(objectField: string): { [k: string]: string } | undefined;
-export function getNpmVersion(objectField?: string): { [k: string]: string } | string | undefined {
-    const { npm_package_name, npm_package_version } = process.env;
-    if (![npm_package_name, npm_package_version].every(Boolean)) {
+export function getNpmVersion<T extends typeof EmptyString>(objectField: T): { version: string } | undefined;
+export function getNpmVersion<T extends Exclude<string, typeof EmptyString>>(objectField: T): { [k in T]: string } | undefined;
+export function getNpmVersion<T extends string | undefined>(objectField?: T): { [k: string]: string } | string | undefined {
+    const { npm_package_name: packageName, npm_package_version: packageVersion } = process.env;
+    if (![packageName, packageVersion].every(Boolean)) {
         return undefined;
     }
 
-    const version = `${npm_package_name}@${npm_package_version}`;
+    const version = `${packageName}@${packageVersion}`;
 
     if (objectField === undefined) {
         return version;
