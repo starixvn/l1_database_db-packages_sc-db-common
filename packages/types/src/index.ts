@@ -1,1 +1,1 @@
-export { TypedEventEmitter } from "./event-emitter";
+export { EventsDescription, GenericListener, TypedEventEmitter } from "./event-emitter";
