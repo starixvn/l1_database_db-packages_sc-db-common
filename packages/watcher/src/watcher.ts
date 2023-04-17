@@ -1,5 +1,5 @@
 import { TypedEventEmitter } from "@ldb/types";
-import { ChangeStream, ChangeStreamDocument } from "mongodb";
+import { ChangeStream, ChangeStreamDocument, Collection, Db, Document, MongoClient } from "mongodb";
 import { CHANGE, ERROR, NOTIFY } from "./constants";
 
 type WatcherEvents = {
@@ -8,21 +8,27 @@ type WatcherEvents = {
     [NOTIFY](data: unknown): void;
 };
 
-export class Watcher extends TypedEventEmitter<WatcherEvents> {
+export class Watcher<TSchema extends Document> extends TypedEventEmitter<WatcherEvents> {
     static readonly CHANGE = CHANGE;
     static readonly ERROR = ERROR;
     static readonly NOTIFY = NOTIFY;
 
-    changeStream: ChangeStream;
+    changeStream: ChangeStream<TSchema>;
 
-    get parent() {
-        return this.changeStream.parent;
+    get parent(): MongoClient | Db | Collection<TSchema> {
+        const parent = this.changeStream.parent;
+
+        if (parent instanceof Collection) {
+            return parent as unknown as Collection<TSchema>;
+        }
+
+        return parent;
     }
     get resumeToken() {
         return this.changeStream.resumeToken;
     }
 
-    constructor(changeStream: ChangeStream) {
+    constructor(changeStream: ChangeStream<TSchema>) {
         super();
 
         this.changeStream = changeStream;
@@ -35,7 +41,7 @@ export class Watcher extends TypedEventEmitter<WatcherEvents> {
         this.changeStream.once(ChangeStream.CLOSE, this.handleChangeStreamClosed.bind(this));
     }
 
-    handleChangeStreamChange(data: ChangeStreamDocument) {
+    handleChangeStreamChange(data: ChangeStreamDocument<TSchema>) {
         this.emit(Watcher.CHANGE, data);
     }
     handleChangeStreamError(error: Error) {
