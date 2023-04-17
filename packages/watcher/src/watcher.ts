@@ -8,7 +8,7 @@ type WatcherEvents = {
     [NOTIFY](data: unknown): void;
 };
 
-export class Watcher<TSchema extends Document> extends TypedEventEmitter<WatcherEvents> {
+export class Watcher<TSchema extends Document = Document> extends TypedEventEmitter<WatcherEvents> {
     static readonly CHANGE = CHANGE;
     static readonly ERROR = ERROR;
     static readonly NOTIFY = NOTIFY;
