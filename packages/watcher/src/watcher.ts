@@ -47,18 +47,6 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
     get resumeToken() {
         return this.changeStream.resumeToken;
     }
-    get find() {
-        if (this.parent instanceof MongoClient || this.parent instanceof Db) {
-            return undefined;
-        }
-        return this.parent.find;
-    }
-    get aggregate() {
-        if (this.parent instanceof MongoClient) {
-            return this.parent.db("admin").aggregate;
-        }
-        return this.parent.aggregate;
-    }
 
     constructor(changeStream: ChangeStream<TSchema>) {
         super();
