@@ -65,14 +65,14 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
         const { operationType } = data;
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
             if (data.fullDocument) {
-                this.transformFullDocument(data.fullDocument);
+                this.transformFullDocument(data);
             }
         }
         this.emit(Watcher.CHANGE, data);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected transformFullDocument(document: TSchema) {
+    protected transformFullDocument(document: ChangeStreamDocument<TSchema>) {
         return;
     }
 
