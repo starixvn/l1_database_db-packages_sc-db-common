@@ -64,9 +64,7 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
     handleChangeStreamChange(data: ChangeStreamDocument<TSchema>) {
         const { operationType } = data;
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
-            if (data.fullDocument) {
-                this.transformFullDocument(data);
-            }
+            this.transformFullDocument(data);
         }
         this.emit(Watcher.CHANGE, data);
     }
