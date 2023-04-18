@@ -24,7 +24,7 @@ export type ChangeStreamCUDocument<TSchema extends Document = Document> =
     | ChangeStreamUpdateDocument<TSchema>
     | ChangeStreamReplaceDocument<TSchema>;
 
-export class Watcher<TSchema extends Document = Document> extends TypedEventEmitter<WatcherEvents> {
+export class Watcher<TSchema extends Document = Document, TSchemaEvent extends Document = TSchema> extends TypedEventEmitter<WatcherEvents<TSchemaEvent>> {
     static readonly CHANGE = CHANGE;
     static readonly ERROR = ERROR;
     static readonly NOTIFY = NOTIFY;
@@ -70,7 +70,7 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
             this.transformFullDocument(data);
         }
-        this.emit(Watcher.CHANGE, data);
+        this.emit(Watcher.CHANGE, data as unknown as ChangeStreamCUDocument<TSchemaEvent>);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
