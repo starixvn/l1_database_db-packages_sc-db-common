@@ -13,13 +13,13 @@ import {
 } from "mongodb";
 import { CHANGE, ERROR, NOTIFY } from "./constants";
 
-export type WatcherEvents = {
-    [CHANGE](data: ChangeStreamDocument): void;
+export type WatcherEvents<TSchema extends Document = Document> = {
+    [CHANGE](data: ChangeStreamDocument<TSchema>): void;
     [ERROR](error: Error): void;
     [NOTIFY](data: unknown): void;
 };
 
-export type ChangeStreamCUDocument<TSchema extends Document> =
+export type ChangeStreamCUDocument<TSchema extends Document = Document> =
     | ChangeStreamInsertDocument<TSchema>
     | ChangeStreamUpdateDocument<TSchema>
     | ChangeStreamReplaceDocument<TSchema>;
