@@ -1,6 +1,6 @@
 {
     "name": "@ldb/watcher",
-    "version": "1.0.0-rc.15",
+    "version": "1.0.0-rc.16",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",

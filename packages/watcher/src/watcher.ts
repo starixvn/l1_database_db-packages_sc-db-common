@@ -13,7 +13,7 @@ import {
 } from "mongodb";
 import { CHANGE, ERROR, NOTIFY } from "./constants";
 
-type WatcherEvents = {
+export type WatcherEvents = {
     [CHANGE](data: ChangeStreamDocument): void;
     [ERROR](error: Error): void;
     [NOTIFY](data: unknown): void;
