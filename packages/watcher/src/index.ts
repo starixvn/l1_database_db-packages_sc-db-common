@@ -1,1 +1,1 @@
-export { Watcher } from "./watcher";
+export { ChangeStreamCUDocument, Watcher } from "./watcher";

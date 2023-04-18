@@ -1,5 +1,16 @@
 import { TypedEventEmitter } from "@ldb/types";
-import { ChangeStream, ChangeStreamDocument, ChangeStreamEvents, Collection, Db, Document, MongoClient } from "mongodb";
+import {
+    ChangeStream,
+    ChangeStreamDocument,
+    ChangeStreamEvents,
+    ChangeStreamInsertDocument,
+    ChangeStreamReplaceDocument,
+    ChangeStreamUpdateDocument,
+    Collection,
+    Db,
+    Document,
+    MongoClient,
+} from "mongodb";
 import { CHANGE, ERROR, NOTIFY } from "./constants";
 
 type WatcherEvents = {
@@ -7,6 +18,11 @@ type WatcherEvents = {
     [ERROR](error: Error): void;
     [NOTIFY](data: unknown): void;
 };
+
+export type ChangeStreamCUDocument<TSchema extends Document> =
+    | ChangeStreamInsertDocument<TSchema>
+    | ChangeStreamUpdateDocument<TSchema>
+    | ChangeStreamReplaceDocument<TSchema>;
 
 export class Watcher<TSchema extends Document = Document> extends TypedEventEmitter<WatcherEvents> {
     static readonly CHANGE = CHANGE;
@@ -70,7 +86,7 @@ export class Watcher<TSchema extends Document = Document> extends TypedEventEmit
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected transformFullDocument(document: ChangeStreamDocument<TSchema>) {
+    protected transformFullDocument(document: ChangeStreamCUDocument<TSchema>) {
         return;
     }
 
