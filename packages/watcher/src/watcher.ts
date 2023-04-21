@@ -2,7 +2,6 @@ import { TypedEventEmitter } from "@ldb/types";
 import {
     ChangeStream,
     ChangeStreamDocument,
-    ChangeStreamEvents,
     ChangeStreamInsertDocument,
     ChangeStreamReplaceDocument,
     ChangeStreamUpdateDocument,
@@ -24,16 +23,14 @@ export type ChangeStreamCUDocument<TSchema extends Document = Document> =
     | ChangeStreamUpdateDocument<TSchema>
     | ChangeStreamReplaceDocument<TSchema>;
 
-export class Watcher<TSchema extends Document = Document, TSchemaEvent extends Document = TSchema> extends TypedEventEmitter<WatcherEvents<TSchemaEvent>> {
+export class Watcher<TSchema extends Document = Document, TSchemaEvent extends Document = TSchema> extends TypedEventEmitter<
+    WatcherEvents<TSchema | TSchemaEvent>
+> {
     static readonly CHANGE = CHANGE;
     static readonly ERROR = ERROR;
     static readonly NOTIFY = NOTIFY;
 
     changeStream: ChangeStream<TSchema>;
-
-    private handleChangeBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.CHANGE];
-    private handleErrorBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.ERROR];
-    private handleCloseBound: ChangeStreamEvents<TSchema>[typeof ChangeStream.CLOSE];
 
     get parent(): MongoClient | Db | Collection<TSchema> {
         const parent = this.changeStream.parent;
@@ -51,31 +48,35 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
     constructor(changeStream: ChangeStream<TSchema>) {
         super();
         this.changeStream = changeStream;
-
-        this.handleChangeBound = this.handleChangeStreamChange.bind(this);
-        this.handleErrorBound = this.handleChangeStreamError.bind(this);
-        this.handleCloseBound = this.handleChangeStreamClosed.bind(this);
-
         this.attachEvents();
     }
 
     attachEvents() {
-        this.changeStream.on(ChangeStream.CHANGE, this.handleChangeBound);
-        this.changeStream.on(ChangeStream.ERROR, this.handleErrorBound);
-        this.changeStream.once(ChangeStream.CLOSE, this.handleCloseBound);
+        this.changeStream.on(ChangeStream.CHANGE, (...args) => this.handleChangeStreamChange(...args));
+        this.changeStream.on(ChangeStream.ERROR, (...args) => this.handleChangeStreamError(...args));
+        this.changeStream.once(ChangeStream.CLOSE, (...args) => this.handleChangeStreamClosed(...args));
     }
 
     handleChangeStreamChange(data: ChangeStreamDocument<TSchema>) {
         const { operationType } = data;
+
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
-            this.transformFullDocument(data);
+            const { fullDocument, ...rest } = data;
+            const transformedData: ChangeStreamCUDocument<TSchema | TSchemaEvent> = {
+                ...rest,
+                fullDocument: this.transformFullDocument(fullDocument),
+            };
+            this.emit(Watcher.CHANGE, transformedData);
+        } else {
+            this.emit(Watcher.CHANGE, data);
         }
-        this.emit(Watcher.CHANGE, data as unknown as ChangeStreamCUDocument<TSchemaEvent>);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected transformFullDocument(document: ChangeStreamCUDocument<TSchema>) {
-        return;
+    protected transformFullDocument(document: TSchema | undefined): TSchemaEvent {
+        if (!document) {
+            return {} as TSchemaEvent;
+        }
+        return document as unknown as TSchemaEvent;
     }
 
     handleChangeStreamError(error: Error) {
@@ -84,29 +85,16 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
 
     handleChangeStreamClosed() {
         const oldChangeStream = this.changeStream;
-        const { parent, pipeline, options, resumeToken, namespace } = oldChangeStream;
-        const { db, collection } = namespace;
-        try {
-            oldChangeStream.removeAllListeners();
-            try {
-                oldChangeStream.close();
-            } catch {
-                /** Ignore close error, this command is to ensure changeStream is closed before re-init */
-            }
+        const { parent, pipeline, options, resumeToken } = oldChangeStream;
 
-            this.changeStream = parent.watch(pipeline, { ...options, resumeAfter: resumeToken });
-            this.attachEvents();
-            this.emit(Watcher.NOTIFY, "Change stream is re-initialized");
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                this.emit(Watcher.ERROR, error);
-            } else {
-                this.emit(Watcher.ERROR, new Error(String(error)));
-            }
-        } finally {
-            if (this.changeStream.closed) {
-                throw new Error(`Error while resume change stream on [${[db, collection].filter(Boolean).join(".")}]`);
-            }
-        }
+        this.closeChangeStream(oldChangeStream);
+
+        this.changeStream = parent.watch(pipeline, { ...options, resumeAfter: resumeToken });
+        this.attachEvents();
+        this.emit(Watcher.NOTIFY, "Change stream is re-initialized");
+    }
+    private closeChangeStream(changeStream: ChangeStream) {
+        changeStream.removeAllListeners();
+        changeStream.close().catch();
     }
 }
