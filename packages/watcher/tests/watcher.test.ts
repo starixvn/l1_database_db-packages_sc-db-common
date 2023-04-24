@@ -15,12 +15,14 @@ describe("[class Watcher]", () => {
             const onEvent = jest.spyOn(mockChangeStream, "on");
             const onceEvent = jest.spyOn(mockChangeStream, "once");
 
+            const spyAttachEvents = jest.spyOn(Watcher.prototype, "attachEvents");
             const watcher = new Watcher(mockChangeStream);
 
             expect(watcher.changeStream).toEqual(mockChangeStream);
             expect(onEvent).toHaveBeenCalledWith("change", expect.any(Function));
             expect(onEvent).toHaveBeenCalledWith("error", expect.any(Function));
             expect(onceEvent).toHaveBeenCalledWith("close", expect.any(Function));
+            expect(spyAttachEvents).toHaveBeenCalledTimes(1);
         });
     });
 
