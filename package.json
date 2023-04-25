@@ -8,18 +8,20 @@
   "scripts": {
       "node:esm": "node --es-module-specifier-resolution=node",
       "test": "yarn workspaces run ${npm_lifecycle_event}",
+      "test:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "test:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "test:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "test:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "build": "yarn workspaces run ${npm_lifecycle_event}",
+      "build:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "build:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "build:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "build:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "publish": "yarn workspaces run ${npm_lifecycle_event}",
+      "publish:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "publish:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
       "publish:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "publish:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "": ""
+      "publish:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}"
   },
   "dependencies": {},
   "devDependencies": {
