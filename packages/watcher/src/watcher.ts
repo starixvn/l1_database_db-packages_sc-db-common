@@ -24,7 +24,7 @@ export type ChangeStreamCUDocument<TSchema extends Document = Document> =
     | ChangeStreamReplaceDocument<TSchema>;
 
 export class Watcher<TSchema extends Document = Document, TSchemaEvent extends Document = TSchema> extends TypedEventEmitter<
-    WatcherEvents<TSchema | TSchemaEvent>
+    WatcherEvents<TSchemaEvent>
 > {
     static readonly CHANGE = CHANGE;
     static readonly ERROR = ERROR;
@@ -62,17 +62,17 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
 
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
             const { fullDocument, ...rest } = data;
-            const transformedData: ChangeStreamCUDocument<TSchema | TSchemaEvent> = {
+            const transformedData = {
                 ...rest,
                 fullDocument: this.transformFullDocument(fullDocument),
-            };
+            } as unknown as ChangeStreamCUDocument<TSchemaEvent>;
             this.emit(Watcher.CHANGE, transformedData);
         } else {
-            this.emit(Watcher.CHANGE, data);
+            this.emit(Watcher.CHANGE, data as unknown as ChangeStreamDocument<TSchemaEvent>);
         }
     }
 
-    protected transformFullDocument(document: TSchema | undefined): TSchemaEvent {
+    protected transformFullDocument(document?: TSchema): TSchemaEvent {
         if (!document) {
             return {} as TSchemaEvent;
         }
