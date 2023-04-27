@@ -1,6 +1,6 @@
 import { SemVer, parseSemVer, parseVersion } from "../src";
 
-describe("[function parseVersionString]", () => {
+describe("[function parseVersion]", () => {
     it("Invalid version string", () => {
         const testCases: string[] = [
             "unit-test",
@@ -51,7 +51,7 @@ describe("[function parseVersionString]", () => {
     });
 });
 
-describe("[function parseVersionString]", () => {
+describe("[function parseSemVer]", () => {
     it("Invalid semver", () => {
         const testCases: string[] = [
             "1",

@@ -1,3 +1,4 @@
-export { getNpmVersion, getNodeEnv } from "./env";
+export { waitMs } from "./async";
+export { getNodeEnv, getProjectNpmPackageVersion } from "./env";
 export { fullInspect, stringify } from "./string";
-export { parseVersion, parseSemVer, SemVer, SEMVER_REGEX, VERSION_REGEX } from "./version";
+export { SEMVER_REGEX, SemVer, VERSION_REGEX, parseSemVer, parseVersion } from "./version";

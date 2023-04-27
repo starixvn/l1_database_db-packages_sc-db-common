@@ -1,6 +1,6 @@
-import { getNodeEnv, getNpmVersion } from "../src";
+import { getNodeEnv, getProjectNpmPackageVersion } from "../src";
 
-describe("[function getNpmVersion]", () => {
+describe("[function getProjectNpmPackageVersion]", () => {
     const envBackup = { ...process.env };
 
     const testInput = [
@@ -28,9 +28,9 @@ describe("[function getNpmVersion]", () => {
             Object.assign(process.env, env);
 
             for (const input of testInput) {
-                expect(getNpmVersion(input)).toEqual(undefined);
+                expect(getProjectNpmPackageVersion(input)).toEqual(undefined);
             }
-            expect(getNpmVersion()).toEqual(undefined);
+            expect(getProjectNpmPackageVersion()).toEqual(undefined);
         }
     });
 
@@ -43,7 +43,7 @@ describe("[function getNpmVersion]", () => {
         for (const [env, output] of testCases) {
             Object.assign(process.env, env);
 
-            expect(getNpmVersion()).toEqual(output);
+            expect(getProjectNpmPackageVersion()).toEqual(output);
         }
     })
 
@@ -52,16 +52,16 @@ describe("[function getNpmVersion]", () => {
             Object.assign(process.env, env);
 
             for (const input of testInput) {
-                expect(getNpmVersion(input)).toEqual({ [input]: output })
+                expect(getProjectNpmPackageVersion(input)).toEqual({ [input]: output })
             }
-            expect(getNpmVersion("")).toEqual({ version: output });
+            expect(getProjectNpmPackageVersion("")).toEqual({ version: output });
         }
     })
 
     process.env = envBackup;
 });
 
-describe("[function getNpmVersion]", () => {
+describe("[function getNodeEnv]", () => {
     const envBackup = { ...process.env };
 
     it("Non-existing NODE_ENV", () => {

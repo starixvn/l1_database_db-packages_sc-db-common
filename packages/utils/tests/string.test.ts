@@ -1,8 +1,7 @@
-import util from "util";
 import { fullInspect, stringify } from "../src/string";
 
 describe("String utils", () => {
-    describe(util.inspect(fullInspect), () => {
+    describe("[function fullInspect]", () => {
         it("Normal inspect", () => {
             const testCases: [unknown, string][] = [
                 [null, "null"],
@@ -44,8 +43,7 @@ describe("String utils", () => {
         });
     });
 
-    describe(util.inspect(stringify), () => {
-
+    describe("[function stringify]", () => {
         it("Normal inspect", () => {
             const testCases: [unknown, string][] = [
                 [null, "null"],
@@ -90,5 +88,5 @@ describe("String utils", () => {
                 expect(result).not.toMatch(/(\u001B\[)/);
             }
         });
-    })
+    });
 });

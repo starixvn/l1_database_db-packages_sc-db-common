@@ -12,9 +12,9 @@ export function parseVersion(version: string) {
     const [, name, semver] = parsed;
     if (!SEMVER_REGEX.test(semver)) {
         return null;
-    };
+    }
 
-    return { name, semver }
+    return { name, semver };
 }
 
 export type SemVer = {
