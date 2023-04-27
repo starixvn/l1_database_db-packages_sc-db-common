@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from "@jest/globals";
+import { stringify, waitMs } from "@ldb/utils";
 import EventEmitter from "events";
 import { ChangeStream, MongoClient } from "mongodb";
 import { Watcher } from "../src/watcher";
@@ -207,6 +208,79 @@ describe("[class Watcher]", () => {
             expect(onEvent).toHaveBeenCalledWith("error", expect.any(Function));
             expect(onceEvent).toHaveBeenCalledWith("close", expect.any(Function));
             expect(spyEmit).toHaveBeenCalledWith(Watcher.NOTIFY, "Change stream is re-initialized");
+        });
+    });
+
+    describe("Error handling", () => {
+        describe("[function emitError]", () => {
+            const mockChangeStream: any = new EventEmitter();
+            const watcher = new Watcher(mockChangeStream);
+
+            const spyEmit = jest.spyOn(watcher, "emit").mockImplementation(() => false);
+            it("Emit Error as is", () => {
+                const error = new Error("1234");
+                (watcher as any).emitError(error);
+                expect(spyEmit).toHaveBeenCalledTimes(1);
+                expect(spyEmit).toHaveBeenLastCalledWith("error", error);
+            });
+
+            it("Emit others as new Error", () => {
+                const testCases = [1234, "abcd", { a: 1, b: 2 }];
+
+                for (const testCase of testCases) {
+                    (watcher as any).emitError(testCase);
+                    expect(spyEmit).toHaveBeenCalledTimes(1);
+                    expect(spyEmit).toHaveBeenLastCalledWith("error", expect.objectContaining({ message: stringify(testCase) }));
+
+                    spyEmit.mockClear();
+                }
+            });
+        });
+
+        describe("Emit Error when handling failed", () => {
+            const mockChangeStream: any = new EventEmitter();
+            const watcher = new Watcher(mockChangeStream);
+
+            const spyHandleChangeStreamChange = jest.spyOn(watcher, "handleChangeStreamChange");
+            const spyHandleChangeStreamError = jest.spyOn(watcher, "handleChangeStreamError");
+            const spyHandleChangeStreamClosed = jest.spyOn(watcher, "handleChangeStreamClosed");
+            const spyEmit = jest.spyOn(watcher, "emit").mockImplementation(() => false);
+
+            it("Handle CHANGE failed", async () => {
+                const error = new Error("handleChangeStreamChange");
+                spyHandleChangeStreamChange.mockImplementation(() => {
+                    throw error;
+                });
+
+                mockChangeStream.emit("change", {});
+                await waitMs(100);
+                expect(spyEmit).toHaveBeenCalledTimes(1);
+                expect(spyEmit).toHaveBeenLastCalledWith("error", error);
+            });
+
+            it("Handle ERROR failed", async () => {
+                const error = new Error("handleChangeStreamError");
+                spyHandleChangeStreamError.mockImplementation(() => {
+                    throw error;
+                });
+
+                mockChangeStream.emit("error", {});
+                await waitMs(100);
+                expect(spyEmit).toHaveBeenCalledTimes(1);
+                expect(spyEmit).toHaveBeenLastCalledWith("error", error);
+            });
+
+            it("Handle CLOSED failed", async () => {
+                const error = new Error("handleChangeStreamClosed");
+                spyHandleChangeStreamClosed.mockImplementation(() => {
+                    throw error;
+                });
+
+                mockChangeStream.emit("close", {});
+                await waitMs(100);
+                expect(spyEmit).toHaveBeenCalledTimes(1);
+                expect(spyEmit).toHaveBeenLastCalledWith("error", error);
+            });
         });
     });
 });

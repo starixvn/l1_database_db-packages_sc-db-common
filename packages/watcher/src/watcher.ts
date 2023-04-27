@@ -1,4 +1,5 @@
-import { TypedEventEmitter } from "@ldb/types";
+import { MaybePromise, TypedEventEmitter } from "@ldb/types";
+import { stringify } from "@ldb/utils";
 import {
     ChangeStream,
     ChangeStreamDocument,
@@ -52,12 +53,39 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
     }
 
     attachEvents() {
-        this.changeStream.on(ChangeStream.CHANGE, (...args) => this.handleChangeStreamChange(...args));
-        this.changeStream.on(ChangeStream.ERROR, (...args) => this.handleChangeStreamError(...args));
-        this.changeStream.once(ChangeStream.CLOSE, (...args) => this.handleChangeStreamClosed(...args));
+        this.changeStream.on(ChangeStream.CHANGE, async (...args) => {
+            try {
+                await this.handleChangeStreamChange(...args);
+            } catch (error: unknown) {
+                this.emitError(error);
+            }
+        });
+        this.changeStream.on(ChangeStream.ERROR, async (...args) => {
+            try {
+                await this.handleChangeStreamError(...args);
+            } catch (error: unknown) {
+                this.emitError(error);
+            }
+        });
+        this.changeStream.once(ChangeStream.CLOSE, async (...args) => {
+            try {
+                await this.handleChangeStreamClosed(...args);
+            } catch (error: unknown) {
+                this.emitError(error);
+            }
+        });
     }
 
-    handleChangeStreamChange(data: ChangeStreamDocument<TSchema>) {
+    private emitError(error: unknown) {
+        if (error instanceof Error) {
+            this.emit("error", error);
+        } else {
+            const newError = new Error(stringify(error));
+            this.emit("error", newError);
+        }
+    }
+
+    handleChangeStreamChange(data: ChangeStreamDocument<TSchema>): MaybePromise<void> {
         const { operationType } = data;
 
         if (operationType === "insert" || operationType === "update" || operationType === "replace") {
@@ -79,11 +107,11 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
         return document as unknown as TSchemaEvent;
     }
 
-    handleChangeStreamError(error: Error) {
+    handleChangeStreamError(error: Error): MaybePromise<void> {
         this.emit(Watcher.ERROR, error);
     }
 
-    handleChangeStreamClosed() {
+    handleChangeStreamClosed(): MaybePromise<void> {
         const oldChangeStream = this.changeStream;
         const { parent, pipeline, options, resumeToken } = oldChangeStream;
 
