@@ -117,7 +117,7 @@ export class Watcher<TSchema extends Document = Document, TSchemaEvent extends D
 
         this.closeChangeStream(oldChangeStream);
 
-        this.changeStream = parent.watch(pipeline, { ...options, resumeAfter: resumeToken });
+        this.changeStream = parent.watch(pipeline, { ...options, startAfter: resumeToken });
         this.attachEvents();
         this.emit(Watcher.NOTIFY, "Change stream is re-initialized");
     }
