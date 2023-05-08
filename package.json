@@ -1,45 +1,45 @@
 {
-  "name": "sc-db-common",
-  "license": "ISC",
-  "private": true,
-  "workspaces": [
-      "packages/*"
-  ],
-  "scripts": {
-      "node:esm": "node --es-module-specifier-resolution=node",
-      "test": "yarn workspaces run ${npm_lifecycle_event}",
-      "test:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "test:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "test:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "test:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "build": "yarn workspaces run ${npm_lifecycle_event}",
-      "build:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "build:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "build:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "build:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "publish": "yarn workspaces run ${npm_lifecycle_event}",
-      "publish:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "publish:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "publish:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-      "publish:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}"
-  },
-  "dependencies": {},
-  "devDependencies": {
-      "@types/jest": "^29.5.0",
-      "@types/node": "^18.14.6",
-      "@typescript-eslint/eslint-plugin": "^5.55.0",
-      "@typescript-eslint/parser": "^5.55.0",
-      "eslint": "^8.36.0",
-      "eslint-config-google": "^0.14.0",
-      "eslint-config-prettier": "^8.7.0",
-      "jest": "^29.5.0",
-      "jest-extended": "^3.2.4",
-      "jest-html-reporters": "^3.1.4",
-      "jest-junit": "^15.0.0",
-      "jest-sonar-reporter": "^2.0.0",
-      "rimraf": "^4.3.0",
-      "ts-jest": "^29.0.5",
-      "ts-node": "^10.9.1",
-      "typescript": "^4.9.5"
-  }
+    "name": "sc-db-common",
+    "license": "ISC",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "node:esm": "node --es-module-specifier-resolution=node",
+        "test": "yarn workspaces run ${npm_lifecycle_event}",
+        "test:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "test:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "test:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "test:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "build": "yarn workspaces run ${npm_lifecycle_event}",
+        "build:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "build:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "build:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "build:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "publish": "yarn workspaces run ${npm_lifecycle_event}",
+        "publish:indexer": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "publish:types": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "publish:utils": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
+        "publish:watcher": "yarn --cwd packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/jest": "^29.5.0",
+        "@types/node": "^18.14.6",
+        "@typescript-eslint/eslint-plugin": "^5.55.0",
+        "@typescript-eslint/parser": "^5.55.0",
+        "eslint": "^8.36.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-config-prettier": "^8.7.0",
+        "jest": "^29.5.0",
+        "jest-extended": "^3.2.4",
+        "jest-html-reporters": "^3.1.4",
+        "jest-junit": "^15.0.0",
+        "jest-sonar-reporter": "^2.0.0",
+        "rimraf": "^4.3.0",
+        "ts-jest": "^29.0.5",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.9.5"
+    }
 }
