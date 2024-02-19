@@ -193,9 +193,6 @@ describe("[class Watcher]", () => {
         const spyAttachEvents = jest.spyOn(watcher, "attachEvents");
         const spyEmit = jest.spyOn(watcher, "emit");
 
-        const mockListener = jest.fn();
-        watcher.on("closed", mockListener);
-
         it("Re-init change stream", () => {
             mockChangeStream.emit(ChangeStream.CLOSE);
             expect(spyClosedListener).toHaveBeenCalledWith();

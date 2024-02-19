@@ -1,11 +1,16 @@
 import EventEmitter from "events";
+import { MaybePromise } from "./promise";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GenericListener = (...args: any[]) => void;
+export type GenericListener = (...args: any[]) => MaybePromise<void>;
+
+export type ErrorListener = (error: Error) => MaybePromise<void>;
 
 export type EventsDescription = Record<string, GenericListener>;
 
 export type CommonEvents = "newListener" | "removeListener";
+
+export type RestKeys<Type, Keys extends string> = Exclude<keyof Type, Keys | CommonEvents>;
 
 export declare interface TypedEventEmitter<Events extends EventsDescription> extends EventEmitter {
     addListener<EventKey extends keyof Events>(event: EventKey, listener: Events[EventKey]): this;
