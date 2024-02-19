@@ -63,8 +63,8 @@ importers:
   packages/indexer:
     dependencies:
       mongodb:
-        specifier: ^5.3.0
-        version: 5.3.0
+        specifier: ^5.7.0
+        version: 5.7.0
 
   packages/scheduler:
     dependencies:
@@ -84,14 +84,14 @@ importers:
   packages/watcher:
     dependencies:
       '@ldb/types':
-        specifier: ^1.0.0
+        specifier: workspace:^
         version: link:../types
       '@ldb/utils':
-        specifier: ^0.1.0
+        specifier: workspace:^
         version: link:../utils
       mongodb:
-        specifier: ^5.1.0
-        version: 5.3.0
+        specifier: ^5.7.0
+        version: 5.7.0
 
 packages:
 
@@ -2597,6 +2597,7 @@ packages:
 
   /memory-pager@1.5.0:
     resolution: {integrity: sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -2658,15 +2659,21 @@ packages:
       whatwg-url: 11.0.0
     dev: false
 
-  /mongodb@5.3.0:
-    resolution: {integrity: sha512-Wy/sbahguL8c3TXQWXmuBabiLD+iVmz+tOgQf+FwkCjhUIorqbAxRbbz00g4ZoN4sXIPwpAlTANMaGRjGGTikQ==}
+  /mongodb@5.7.0:
+    resolution: {integrity: sha512-zm82Bq33QbqtxDf58fLWBwTjARK3NSvKYjyz997KSy6hpat0prjeX/kxjbPVyZY60XYPDNETaHkHJI2UCzSLuw==}
     engines: {node: '>=14.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.201.0
+      '@mongodb-js/zstd': ^1.1.0
+      kerberos: ^2.0.1
       mongodb-client-encryption: '>=2.3.0 <3'
       snappy: ^7.2.2
     peerDependenciesMeta:
       '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      kerberos:
         optional: true
       mongodb-client-encryption:
         optional: true
@@ -3023,6 +3030,7 @@ packages:
 
   /sparse-bitfield@3.0.3:
     resolution: {integrity: sha1-/0rm5oZWBWuks+eSqzM004JzyhE=}
+    requiresBuild: true
     dependencies:
       memory-pager: 1.5.0
     dev: false
