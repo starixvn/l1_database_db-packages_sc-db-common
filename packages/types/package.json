@@ -1,19 +1,15 @@
 {
     "name": "@ldb/types",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
     "type": "module",
     "scripts": {
         "test": "echo",
-        "prebuild": "yarn test",
+        "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
-        "prepublish": "yarn build",
+        "prepublish": "pnpm build",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
-    },
-    "dependencies": {
-        "mongodb": "^5.1.0"
-    },
-    "devDependencies": {}
+    }
 }
