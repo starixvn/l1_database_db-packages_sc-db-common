@@ -1,1 +1,1 @@
-export { CollectionIndexer } from "./collection-indexer";
+export { createIndex, deployIndex, dropIndex } from "./collection-indexer.js";

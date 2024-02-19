@@ -1,4 +1,4 @@
-import { SemVer, parseSemVer, parseVersion } from "../src";
+import { SemVer, parseSemVer, parseVersion } from "../src/version";
 
 describe("[function parseVersion]", () => {
     it("Invalid version string", () => {
@@ -69,7 +69,7 @@ describe("[function parseSemVer]", () => {
             "1.2.3-.1",
             "1.2.3+.",
             "1.2.3+.2",
-            "1.2.3-0000000"
+            "1.2.3-0000000",
         ];
 
         for (const test of testCases) {
