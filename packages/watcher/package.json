@@ -1,6 +1,6 @@
 {
     "name": "@ldb/watcher",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -13,9 +13,8 @@
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {
-        "@ldb/types": "^1.0.0",
-        "@ldb/utils": "^0.1.0",
-        "mongodb": "^5.1.0"
-    },
-    "devDependencies": {}
+        "@ldb/types": "workspace:^",
+        "@ldb/utils": "workspace:^",
+        "mongodb": "^5.7.0"
+    }
 }
