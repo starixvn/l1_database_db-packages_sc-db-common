@@ -1,20 +1,23 @@
 {
     "name": "@ldb/watcher",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
     "type": "module",
     "scripts": {
-        "test": "NODE_OPTIONS=\"--experimental-vm-modules --es-module-specifier-resolution=node --no-warnings\" jest",
-        "prebuild": "yarn test",
+        "test": "jest",
+        "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
-        "prepublish": "yarn build",
+        "prepublish": "pnpm build",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
+    "files": [
+        "/lib"
+    ],
     "dependencies": {
         "@ldb/types": "workspace:^",
         "@ldb/utils": "workspace:^",
-        "mongodb": "^5.7.0"
+        "mongodb": "^6.3.0"
     }
 }
