@@ -1,7 +1,10 @@
 import EventEmitter from "events";
+import { MaybePromise } from "./promise";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GenericListener = (...args: any[]) => void;
+export type GenericListener = (...args: any[]) => MaybePromise<void>;
+
+export type ErrorListener = (error: Error) => MaybePromise<void>;
 
 export type EventsDescription = Record<string, GenericListener>;
 
