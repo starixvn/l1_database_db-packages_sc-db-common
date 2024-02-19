@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import { waitMs } from "@ldb/utils";
-import { FireListener, Scheduler, SchedulerConfigs } from "../src";
+import { FireEventListener, FireListener, Scheduler, SchedulerConfigs } from "../src";
 
 afterEach(() => {
     jest.resetAllMocks();
@@ -157,8 +157,9 @@ describe("[class Scheduler]", () => {
 
                 testInstance.fire("unit-test");
 
-                expect(spyEmit).toHaveBeenCalledTimes(1);
-                expect(spyEmit).toHaveBeenLastCalledWith(Scheduler.FIRE, "unit-test");
+                expect(spyEmit).toHaveBeenCalledTimes(2);
+                expect(spyEmit).toHaveBeenNthCalledWith(1, "unit-test");
+                expect(spyEmit).toHaveBeenNthCalledWith(2, Scheduler.FIRE, "unit-test");
                 expect(spySchedule).toHaveBeenCalledTimes(1);
                 expect(spySchedule).toHaveBeenLastCalledWith("unit-test", [3333, 4444]);
             });
@@ -169,8 +170,9 @@ describe("[class Scheduler]", () => {
 
                 expect(() => testInstance.fire("non-existent")).toThrowError();
 
-                expect(spyEmit).toHaveBeenCalledTimes(1);
-                expect(spyEmit).toHaveBeenLastCalledWith(Scheduler.FIRE, "non-existent");
+                expect(spyEmit).toHaveBeenCalledTimes(2);
+                expect(spyEmit).toHaveBeenNthCalledWith(1, "non-existent");
+                expect(spyEmit).toHaveBeenNthCalledWith(2, Scheduler.FIRE, "non-existent");
                 expect(spySchedule).toHaveBeenCalledTimes(0);
             });
         });
@@ -178,37 +180,45 @@ describe("[class Scheduler]", () => {
 
     describe("Fire periodically", () => {
         it("number config", async () => {
-            const schedulerConfig = { hundredMs: 100 };
-            const spyNextScheduler = jest.spyOn(TestScheduler, "nextScheduleTimeout");
+            const event = "thousandMs" as const;
+            const schedulerConfig = { [event]: 1_000 };
+            const spySchedule = jest.spyOn(TestScheduler.prototype, "schedule");
             const scheduler = new Scheduler(schedulerConfig);
 
-            const mockListener = jest.fn<FireListener>();
-            scheduler.addListener(Scheduler.FIRE, mockListener);
+            const mockFireListener = jest.fn<FireListener>();
+            const mockFireEventListener = jest.fn<FireEventListener>();
+            scheduler.addListener(event, mockFireListener);
+            scheduler.addListener(Scheduler.FIRE, mockFireEventListener);
 
-            await waitMs(500);
-            scheduler.abort("hundredMs");
+            await waitMs(5_000);
+            scheduler.abort(event);
 
-            expect(spyNextScheduler).toHaveBeenCalledTimes(6);
-            expect(spyNextScheduler).toHaveBeenLastCalledWith([100, 0]);
-            expect(mockListener).toHaveBeenCalledTimes(5);
-            expect(mockListener).toHaveBeenLastCalledWith("hundredMs");
-        }, 1_000);
+            expect(spySchedule).toHaveBeenCalledWith(event, [1_000, 0]);
+            expect(mockFireListener).toHaveBeenCalledTimes(5);
+            expect(mockFireListener).toHaveBeenLastCalledWith();
+            expect(mockFireEventListener).toHaveBeenCalledTimes(5);
+            expect(mockFireEventListener).toHaveBeenLastCalledWith(event);
+        }, 10_000);
         it("array config", async () => {
-            const schedulerConfig = { hundredMs: [100, 10] } satisfies SchedulerConfigs;
-            const spyNextScheduler = jest.spyOn(TestScheduler, "nextScheduleTimeout");
+            const event = "thousandMs" as const;
+            const schedulerConfig = { [event]: [1_000, 10] } satisfies SchedulerConfigs;
+            const spySchedule = jest.spyOn(TestScheduler.prototype, "schedule");
             const scheduler = new Scheduler(schedulerConfig);
 
-            const mockListener = jest.fn<FireListener>();
-            scheduler.addListener(Scheduler.FIRE, mockListener);
+            const mockFireListener = jest.fn<FireListener>();
+            const mockFireEventListener = jest.fn<FireEventListener>();
+            scheduler.addListener(event, mockFireListener);
+            scheduler.addListener(Scheduler.FIRE, mockFireEventListener);
 
-            await waitMs(500);
-            scheduler.abort("hundredMs");
+            await waitMs(3_030);
+            scheduler.abort(event);
 
-            expect(spyNextScheduler).toHaveBeenCalledTimes(6);
-            expect(spyNextScheduler).toHaveBeenLastCalledWith([100, 10]);
-            expect(mockListener).toHaveBeenCalledTimes(5);
-            expect(mockListener).toHaveBeenLastCalledWith("hundredMs");
-        }, 1_000);
+            expect(spySchedule).toHaveBeenCalledWith(event, [1_000, 10]);
+            expect(mockFireListener).toHaveBeenCalledTimes(3);
+            expect(mockFireListener).toHaveBeenLastCalledWith();
+            expect(mockFireEventListener).toHaveBeenCalledTimes(3);
+            expect(mockFireEventListener).toHaveBeenLastCalledWith(event);
+        }, 10_000);
     });
 
     describe("Invalid states", () => {
@@ -276,6 +286,18 @@ describe("[class Scheduler]", () => {
 
                 spyThrow.mockClear();
             }
+        });
+
+        it("Input has parent prototype", () => {
+            const parent = { parent: 9876 };
+            const testCase = Object.assign(Object.create(parent), { own: 6789 });
+
+            const spySchedule = jest.spyOn(TestScheduler.prototype, "schedule");
+            const scheduler = new TestScheduler(testCase);
+            scheduler.abort("own");
+
+            expect(spySchedule).toHaveBeenCalledTimes(1);
+            expect(spySchedule).toHaveBeenLastCalledWith("own", [6789, 0]);
         });
     });
 });

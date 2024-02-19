@@ -1,6 +1,6 @@
 {
     "name": "@ldb/scheduler",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -13,7 +13,7 @@
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {
-        "@ldb/utils": "^0.1.0"
-    },
-    "devDependencies": {}
+        "@ldb/types": "workspace:^1.0.0",
+        "@ldb/utils": "workspace:^"
+    }
 }
