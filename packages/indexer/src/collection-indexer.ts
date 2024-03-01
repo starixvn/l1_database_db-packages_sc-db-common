@@ -15,12 +15,15 @@ export class CollectionIndexer {
             /** Try create index right away */
             indexName = await this.createIndex(indexDescription);
         } catch (error: unknown) {
-            /** Errors other than IndexOptionConflict are not expected, throw */
-            if (error instanceof MongoServerError && error.code !== 85) {
+            /** Errors other than
+             *  - [85] IndexOptionConflict
+             *  - [86] IndexKeySpecsConflict
+             *  are not expected, throw
+             */
+            if (error instanceof MongoServerError && error.code !== 85 && error.code !== 86) {
                 throw error;
             }
 
-            /** Error 85 - IndexOptionsConflict - drop and recreate index */
             await this.dropIndex(indexDescription);
             indexName = await this.createIndex(indexDescription);
         }

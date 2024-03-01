@@ -1,18 +1,18 @@
 {
     "name": "@ldb/indexer",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
     "type": "module",
     "scripts": {
         "test": "NODE_OPTIONS=\"--experimental-vm-modules --es-module-specifier-resolution=node --no-warnings\" jest",
-        "prebuild": "yarn test",
+        "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
-        "prepublish": "yarn build",
+        "prepublish": "pnpm build",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {
-        "mongodb": "^5.7.0"
+        "mongodb": "^6.4.0"
     }
 }
