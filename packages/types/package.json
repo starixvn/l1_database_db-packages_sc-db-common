@@ -6,16 +6,13 @@
     "license": "ISC",
     "type": "module",
     "scripts": {
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
         "prepublish": "pnpm build",
-        "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
+        "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\" --allow-empty"
     },
     "files": [
         "/lib"
-    ],
-    "dependencies": {
-        "mongodb": "^6.3.0"
-    }
+    ]
 }

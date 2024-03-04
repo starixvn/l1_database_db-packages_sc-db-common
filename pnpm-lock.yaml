@@ -87,11 +87,7 @@ importers:
         specifier: workspace:^
         version: link:../utils
 
-  packages/types:
-    dependencies:
-      mongodb:
-        specifier: ^6.3.0
-        version: 6.3.0
+  packages/types: {}
 
   packages/utils: {}
 

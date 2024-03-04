@@ -15,5 +15,8 @@
     "dependencies": {
         "@ldb/types": "workspace:^",
         "@ldb/utils": "workspace:^"
-    }
+    },
+    "files": [
+        "/lib"
+    ]
 }

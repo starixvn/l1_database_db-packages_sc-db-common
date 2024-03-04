@@ -12,12 +12,12 @@
         "prepublish": "pnpm build",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
-    "files": [
-        "/lib"
-    ],
     "dependencies": {
         "@ldb/types": "workspace:^",
         "@ldb/utils": "workspace:^",
         "mongodb": "^6.3.0"
-    }
+    },
+    "files": [
+        "/lib"
+    ]
 }
