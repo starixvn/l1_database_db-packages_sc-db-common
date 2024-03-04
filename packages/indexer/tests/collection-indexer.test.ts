@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from "@jest/globals";
-import { IndexDescription } from "mongodb";
+import { IndexDescription } from "@ldb/mongo";
 import { CollectionIndexer } from "../src";
 
 afterEach(() => {

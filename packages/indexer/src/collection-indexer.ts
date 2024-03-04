@@ -1,4 +1,4 @@
-import { CollationOptions, Collection, IndexDescription, IndexDirection, MongoServerError } from "mongodb";
+import { CollationOptions, Collection, IndexDescription, IndexDirection, MongoServerError } from "@ldb/mongo";
 
 type AcceptedFilters = Pick<Partial<IndexDescription>, "key" | "name"> | { [key: string]: IndexDirection } | string;
 

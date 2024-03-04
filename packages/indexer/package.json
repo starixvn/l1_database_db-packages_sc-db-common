@@ -1,6 +1,6 @@
 {
     "name": "@ldb/indexer",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -12,8 +12,10 @@
         "prepublish": "pnpm build",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
+    "files": [
+        "lib"
+    ],
     "dependencies": {
-        "mongodb": "^6.4.0"
-    },
-    "files": ["lib"]
+        "@ldb/mongo": "workspace:^"
+    }
 }
