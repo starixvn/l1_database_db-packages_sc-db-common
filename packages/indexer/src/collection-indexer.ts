@@ -4,9 +4,11 @@ export async function deployIndex<T extends Document>(collection: Collection<T>,
     try {
         return await createIndex(collection, index);
     } catch (error) {
-        if (error instanceof MongoServerError && error.codeName !== "IndexOptionsConflict") {
-            await dropIndex(collection, index);
-            return await createIndex(collection, index);
+        if (error instanceof MongoServerError) {
+            if (error.codeName === "IndexOptionsConflict" || error.codeName === "IndexKeySpecsConflict") {
+                await dropIndex(collection, index);
+                return await createIndex(collection, index);
+            }
         }
         console.log(new Date().toISOString(), "E", error);
     }
