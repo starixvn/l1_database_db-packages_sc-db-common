@@ -65,9 +65,27 @@ importers:
 
   packages/indexer:
     dependencies:
+      '@ldb/mongo':
+        specifier: workspace:^
+        version: link:../mongo
+
+  packages/mongo:
+    dependencies:
+      bson:
+        specifier: ^6.4.0
+        version: 6.4.0
       mongodb:
-        specifier: ^6.3.0
-        version: 6.3.0
+        specifier: ^6.4.0
+        version: 6.4.0
+
+  packages/scheduler:
+    dependencies:
+      '@ldb/types':
+        specifier: workspace:^
+        version: link:../types
+      '@ldb/utils':
+        specifier: workspace:^
+        version: link:../utils
 
   packages/types:
     dependencies:
@@ -1295,8 +1313,8 @@ packages:
       node-int64: 0.4.0
     dev: true
 
-  /bson@6.3.0:
-    resolution: {integrity: sha512-balJfqwwTBddxfnidJZagCBPP/f48zj9Sdp3OJswREOgsJzHiQSaOIAtApSgDQFYgHqAvFkp53AFSqjMDZoTFw==}
+  /bson@6.4.0:
+    resolution: {integrity: sha512-6/gSSEdbkuFlSb+ufj5jUSU4+wo8xQOwm2bDSqwmxiPE17JTpsP63eAwoN8iF8Oy4gJYj+PAL3zdRCTdaw5Y1g==}
     engines: {node: '>=16.20.1'}
     dev: false
 
@@ -2769,7 +2787,39 @@ packages:
         optional: true
     dependencies:
       '@mongodb-js/saslprep': 1.1.4
-      bson: 6.3.0
+      bson: 6.4.0
+      mongodb-connection-string-url: 3.0.0
+    dev: false
+
+  /mongodb@6.4.0:
+    resolution: {integrity: sha512-MdFHsyb1a/Ee0H3NmzWTSLqchacDV/APF0H6BNQvraWrOiIocys2EmTFZPgHxWhcfO94c1F34I9MACU7x0hHKA==}
+    engines: {node: '>=16.20.1'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.188.0
+      '@mongodb-js/zstd': ^1.1.0
+      gcp-metadata: ^5.2.0
+      kerberos: ^2.0.1
+      mongodb-client-encryption: '>=6.0.0 <7'
+      snappy: ^7.2.2
+      socks: ^2.7.1
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+    dependencies:
+      '@mongodb-js/saslprep': 1.1.4
+      bson: 6.4.0
       mongodb-connection-string-url: 3.0.0
     dev: false
 

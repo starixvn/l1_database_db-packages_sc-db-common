@@ -1,4 +1,4 @@
-import { CollationOptions, Collection, Document, IndexDescription, IndexDirection, MongoServerError } from "mongodb";
+import { CollationOptions, Collection, Document, IndexDescription, IndexDirection, MongoServerError } from "@ldb/mongo";
 
 export async function deployIndex<T extends Document>(collection: Collection<T>, index: IndexDescription) {
     try {
