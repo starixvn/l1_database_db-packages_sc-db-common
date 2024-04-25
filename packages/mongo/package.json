@@ -1,6 +1,6 @@
 {
     "name": "@ldb/mongo",
-    "version": "6.4.0",
+    "version": "6.5.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -13,8 +13,9 @@
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {
-        "bson": "^6.4.0",
-        "mongodb": "^6.4.0"
+        "bson": "6.5.0",
+        "mongodb": "6.5.0",
+        "saslprep": "1.0.3"
     },
     "files": [
         "/lib"
