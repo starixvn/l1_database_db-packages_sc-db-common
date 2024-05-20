@@ -11,7 +11,7 @@
         "build": "rimraf lib/* && tsc",
         "prepublish": "pnpm build",
         "publish:lib": "cp package.publish.json lib/package.json; cd lib; npm publish",
-        "publish:": "pnpm prepublish & pnpm publish:lib & pnpm postpublish",
+        "publish:": "pnpm prepublish && pnpm publish:lib && pnpm postpublish",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {
