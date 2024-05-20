@@ -1,6 +1,6 @@
 {
     "name": "@ldb/mongo",
-    "version": "6.6.0",
+    "version": "6.6.1",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -10,6 +10,7 @@
         "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
         "prepublish": "pnpm build",
+        "publish": "cp package.publish.json lib/package.json; cd lib; npm publish",
         "postpublish": "git reset HEAD -- . && git add . && git commit -m \"chore(publish): \\`${npm_package_name}\\` - ${npm_package_version}\""
     },
     "dependencies": {

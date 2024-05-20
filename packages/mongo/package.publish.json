@@ -1,0 +1,13 @@
+{
+    "name": "@ldb/mongo",
+    "version": "6.6.1",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "bson": "6.7.0",
+        "mongodb": "6.6.2",
+        "saslprep": "1.0.3"
+    }
+}
