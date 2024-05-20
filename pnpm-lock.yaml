@@ -69,11 +69,11 @@ importers:
   packages/mongo:
     dependencies:
       bson:
-        specifier: 6.5.0
-        version: 6.5.0
+        specifier: 6.7.0
+        version: 6.7.0
       mongodb:
-        specifier: 6.5.0
-        version: 6.5.0
+        specifier: 6.6.2
+        version: 6.6.2
       saslprep:
         specifier: 1.0.3
         version: 1.0.3
@@ -682,8 +682,8 @@ packages:
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
 
-  bson@6.5.0:
-    resolution: {integrity: sha512-DXf1BTAS8vKyR90BO4x5v3rKVarmkdkzwOrnYDFdjAY694ILNDkmA3uRh1xXJEl+C1DAh8XCvAQ+Gh3kzubtpg==}
+  bson@6.7.0:
+    resolution: {integrity: sha512-w2IquM5mYzYZv6rs3uN2DZTOBe2a0zXLj53TGDqwF4l6Sz/XsISrisXOJihArF9+BZ6Cq/GjVht7Sjfmri7ytQ==}
     engines: {node: '>=16.20.1'}
 
   buffer-from@1.1.2:
@@ -1443,8 +1443,8 @@ packages:
       socks:
         optional: true
 
-  mongodb@6.5.0:
-    resolution: {integrity: sha512-Fozq68InT+JKABGLqctgtb8P56pRrJFkbhW0ux+x1mdHeyinor8oNzJqwLjV/t5X5nJGfTlluxfyMnOXNggIUA==}
+  mongodb@6.6.2:
+    resolution: {integrity: sha512-ZF9Ugo2JCG/GfR7DEb4ypfyJJyiKbg5qBYKRintebj8+DNS33CyGMkWbrS9lara+u+h+yEOGSRiLhFO/g1s1aw==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -2700,7 +2700,7 @@ snapshots:
     dependencies:
       node-int64: 0.4.0
 
-  bson@6.5.0: {}
+  bson@6.7.0: {}
 
   buffer-from@1.1.2: {}
 
@@ -3599,13 +3599,13 @@ snapshots:
   mongodb@6.3.0:
     dependencies:
       '@mongodb-js/saslprep': 1.1.4
-      bson: 6.5.0
+      bson: 6.7.0
       mongodb-connection-string-url: 3.0.0
 
-  mongodb@6.5.0:
+  mongodb@6.6.2:
     dependencies:
       '@mongodb-js/saslprep': 1.1.5
-      bson: 6.5.0
+      bson: 6.7.0
       mongodb-connection-string-url: 3.0.0
 
   ms@2.1.2: {}

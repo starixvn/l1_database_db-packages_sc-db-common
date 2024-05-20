@@ -1,12 +1,11 @@
 parser: "@typescript-eslint/parser"
 plugins: ["@typescript-eslint"]
-plugins: ["@typescript-eslint"]
 extends:
     - "google"
     - "plugin:@typescript-eslint/eslint-recommended"
     - "plugin:@typescript-eslint/recommended"
     - "prettier"
-    - "security"
+    - "plugin:security/recommended-legacy"
 ignorePatterns: ["/lib/**"]
 parserOptions:
     project: "tsconfig.json"
