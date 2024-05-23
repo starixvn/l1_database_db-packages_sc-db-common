@@ -1,11 +1,12 @@
 {
     "name": "@ldb/mongo",
-    "version": "6.6.2",
+    "version": "6.6.3",
     "main": "index.js",
     "types": "index.d.ts",
     "license": "ISC",
     "type": "module",
     "dependencies": {
+        "@mongodb-js/zstd": "1.2.0",
         "bson": "6.7.0",
         "mongodb": "6.6.2",
         "saslprep": "1.0.3"
