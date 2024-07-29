@@ -3,39 +3,25 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "preinstall": "npx only-allow pnpm",
-        "test": "pnpm -r --filter='./packages/*' run ${npm_lifecycle_event%%:*}",
-        "test:indexer": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "test:types": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "test:utils": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "test:watcher": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "build": "pnpm -r --filter='./packages/*' run ${npm_lifecycle_event%%:*}",
-        "build:indexer": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "build:types": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "build:utils": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "build:watcher": "pnpm -r --filter=./packages/${npm_lifecycle_event##*:} run ${npm_lifecycle_event%%:*}",
-        "publish:indexer": "pnpm --filter=./packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-        "publish:types": "pnpm --filter=./packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-        "publish:utils": "pnpm --filter=./packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}",
-        "publish:watcher": "pnpm --filter=./packages/${npm_lifecycle_event##*:} ${npm_lifecycle_event%%:*}"
+        "preinstall": "npx only-allow pnpm"
     },
     "devDependencies": {
         "@tsconfig/node20": "^20.1.4",
         "@types/jest": "^29.5.12",
-        "@types/node": "^20.12.7",
+        "@types/node": "^20.14.13",
         "eslint": "^8.57.0",
         "eslint-config-google": "^0.14.0",
         "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-security": "^3.0.0",
+        "eslint-plugin-security": "^3.0.1",
         "jest": "^29.7.0",
         "jest-extended": "^4.0.2",
         "jest-html-reporters": "^3.1.7",
         "jest-junit": "^16.0.0",
         "jest-sonar-reporter": "^2.0.0",
-        "rimraf": "^5.0.5",
-        "ts-jest": "^29.1.2",
+        "rimraf": "^5.0.9",
+        "ts-jest": "^29.2.3",
         "ts-node": "^10.9.2",
-        "typescript": "^5.4.5",
-        "typescript-eslint": "^7.7.1"
+        "typescript": "^5.5.4",
+        "typescript-eslint": "^7.17.0"
     }
 }

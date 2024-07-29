@@ -1,6 +1,6 @@
 {
     "name": "@ldb/mongo",
-    "version": "6.6.3",
+    "version": "6.8.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
@@ -16,8 +16,8 @@
     },
     "dependencies": {
         "@mongodb-js/zstd": "1.2.0",
-        "bson": "6.7.0",
-        "mongodb": "6.6.2",
+        "bson": "6.8.0",
+        "mongodb": "6.8.0",
         "saslprep": "1.0.3"
     },
     "files": [
