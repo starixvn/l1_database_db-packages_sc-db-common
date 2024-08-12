@@ -4,7 +4,7 @@ import { MaybePromise } from "./promise";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GenericListener = (...args: any[]) => MaybePromise<void>;
 
-export type ErrorListener = (error: Error) => MaybePromise<void>;
+export type ErrorListener = (error: unknown) => MaybePromise<void>;
 
 export type EventsDescription = Record<string, GenericListener>;
 
@@ -39,7 +39,9 @@ export declare interface TypedEventEmitter<Events extends EventsDescription> ext
 
     rawListeners<EventKey extends keyof Events>(event: EventKey | CommonEvents | symbol | string): Events[EventKey][];
 
-    emit<EventKey extends keyof Events>(event: EventKey | symbol, ...args: Parameters<Events[EventKey]>): boolean;
+    emit<EventKey extends keyof Events>(event: EventKey, ...args: Parameters<Events[EventKey]>): boolean;
+    emit(event: CommonEvents, eventName: string | symbol, listener: GenericListener): boolean;
+    emit(event: string | symbol, ...args: Parameters<GenericListener>): boolean;
 
     listenerCount<EventKey extends keyof Events>(type: EventKey | CommonEvents | symbol | string): number;
 
@@ -56,5 +58,5 @@ export declare interface TypedEventEmitter<Events extends EventsDescription> ext
     setMaxListeners(n: number): this;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-declaration-merging
 export class TypedEventEmitter<Events extends EventsDescription> extends EventEmitter {}
