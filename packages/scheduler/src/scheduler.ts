@@ -4,6 +4,8 @@ export type FireListener = () => MaybePromise<void>;
 
 export type TimerConfig = [number, number];
 
+export type SchedulerEventDescriptions<ScheduleKey extends string> = Record<ScheduleKey, FireListener>;
+
 const getDelayMs = (config: TimerConfig) => {
     const [msPeriod, msOffset] = config;
     const nextScheduleTimeout: number = (Math.floor((Date.now() - msOffset) / msPeriod) + 1) * msPeriod + msOffset;
@@ -14,7 +16,7 @@ const throwError = (event: string, errorMessage: string) => {
     throw new Error(`@${event} - ${errorMessage}`);
 };
 
-export class Scheduler<ScheduleKey extends string> extends TypedEventEmitter<Record<ScheduleKey, FireListener>> {
+export class Scheduler<ScheduleKey extends string> extends TypedEventEmitter<SchedulerEventDescriptions<ScheduleKey>> {
     static FIRE = Symbol("FIRE");
     private configs: Map<ScheduleKey, TimerConfig> = new Map();
     private timeouts: Map<ScheduleKey, NodeJS.Timeout> = new Map();

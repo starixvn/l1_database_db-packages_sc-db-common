@@ -14,5 +14,5 @@
         "alwaysStrict": true
     },
     "compileOnSave": true,
-    "include": ["packages/**/*"]
+    "include": ["packages/**/src/**/*"]
 }
