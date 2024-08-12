@@ -1,12 +1,12 @@
 {
     "name": "@ldb/scheduler",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "license": "ISC",
     "type": "module",
     "scripts": {
-        "test": "NODE_OPTIONS=\"--experimental-vm-modules --es-module-specifier-resolution=node --no-warnings\" jest",
+        "test": "jest --passWithNoTests",
         "prebuild": "pnpm test",
         "build": "rimraf lib/* && tsc",
         "prepublish": "pnpm build",

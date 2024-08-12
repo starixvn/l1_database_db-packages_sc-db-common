@@ -1,91 +1,63 @@
-import { ErrorListener, MaybePromise, RestKeys, TypedEventEmitter } from "@ldb/types";
-import { stringify } from "@ldb/utils";
-
-const Event = {
-    FIRE: "FIRE",
-    ERROR: "ERROR",
-} as const;
+import { TypedEventEmitter, type MaybePromise } from "@ldb/types";
 
 export type FireListener = () => MaybePromise<void>;
-export type FireEventListener = (event: SchedulerKeys) => MaybePromise<void>;
-type SchedulerEvents = Record<string, FireListener> &
-    Record<typeof Event.FIRE, FireEventListener> &
-    Record<typeof Event.ERROR, ErrorListener>;
-type SchedulerKeys = RestKeys<SchedulerEvents, (typeof Event)[keyof typeof Event]>;
-export type SchedulerValue = [number, number];
-export type SchedulerConfigs = Record<SchedulerKeys, number | SchedulerValue>;
 
-export class Scheduler extends TypedEventEmitter<SchedulerEvents> {
-    static readonly FIRE = Event.FIRE;
-    static readonly ERROR = Event.ERROR;
+export type TimerConfig = [number, number];
 
-    private static throw(event: string, errorMessage: string): never {
-        throw new Error(`@${event} - ${errorMessage}`);
-    }
+const getDelayMs = (config: TimerConfig) => {
+    const [msPeriod, msOffset] = config;
+    const nextScheduleTimeout: number = (Math.floor((Date.now() - msOffset) / msPeriod) + 1) * msPeriod + msOffset;
+    return nextScheduleTimeout - Date.now();
+};
 
-    private static parseConfigValue(value: number | SchedulerValue): SchedulerValue {
-        if (typeof value === "number") {
-            return [value, 0];
-        }
+const throwError = (event: string, errorMessage: string) => {
+    throw new Error(`@${event} - ${errorMessage}`);
+};
 
-        if (!(value instanceof Array)) {
-            Scheduler.throw("parseConfigValue", `Invalid scheduler config type: ${stringify(value, false)}`);
-        }
+export class Scheduler<ScheduleKey extends string> extends TypedEventEmitter<Record<ScheduleKey, FireListener>> {
+    static FIRE = Symbol("FIRE");
+    private configs: Map<ScheduleKey, TimerConfig> = new Map();
+    private timeouts: Map<ScheduleKey, NodeJS.Timeout> = new Map();
 
-        const [msPeriod, msOffset] = value;
-
-        if (typeof msPeriod === "number" && typeof msOffset === "number") {
-            return [msPeriod, msOffset];
-        }
-
-        Scheduler.throw("parseConfigValue", `Invalid scheduler config value: ${stringify(value, false)}`);
-    }
-
-    private static nextScheduleTimeout(config: SchedulerValue): number {
-        const [msPeriod, msOffset] = config;
-        const nextScheduleTimeout: number = (Math.floor((Date.now() + msOffset) / msPeriod) + 1) * msPeriod - msOffset;
-        return nextScheduleTimeout - Date.now();
-    }
-
-    private readonly boundFire = (event: SchedulerKeys) => this.fire(event);
-    private configs: Map<SchedulerKeys, SchedulerValue> = new Map();
-    private timeouts: Map<SchedulerKeys, NodeJS.Timeout> = new Map();
-
-    constructor(eventConfigs: SchedulerConfigs) {
+    constructor(schedulerConfig: Record<ScheduleKey, TimerConfig>) {
         super();
+        this.selfBound();
+        this.configure(schedulerConfig);
+    }
 
-        if (!eventConfigs || typeof eventConfigs !== "object") {
-            Scheduler.throw("Scheduler", `Invalid constructor parameter: ${stringify(eventConfigs)}`);
-        }
+    private selfBound() {
+        this.fire = this.fire.bind(this);
+    }
 
-        for (const event in eventConfigs) {
-            if (!eventConfigs.hasOwnProperty(event)) {
+    private configure(schedulerConfig: Record<ScheduleKey, TimerConfig>) {
+        for (const event in schedulerConfig) {
+            if (!schedulerConfig.hasOwnProperty(event)) {
                 continue;
             }
-            const value = eventConfigs[event];
-            const config = Scheduler.parseConfigValue(value);
+
+            const config = schedulerConfig[`${event}` as ScheduleKey];
             this.configs.set(event, config);
             this.schedule(event, config);
         }
     }
 
-    abort(event: SchedulerKeys) {
+    private schedule<Event extends ScheduleKey>(event: Event, config: TimerConfig) {
+        this.abort(event);
+
+        const delayMs = getDelayMs(config);
+        this.timeouts.set(event, setTimeout(this.fire, delayMs, event));
+    }
+
+    abort<Event extends ScheduleKey>(event: Event) {
         const lastTimeout = this.timeouts.get(event);
         clearTimeout(lastTimeout);
     }
 
-    private schedule(event: SchedulerKeys, config: SchedulerValue) {
-        this.abort(event);
-
-        const nextSchedule = Scheduler.nextScheduleTimeout(config);
-        this.timeouts.set(event, setTimeout(this.boundFire, nextSchedule, event));
-    }
-
-    private fire(event: SchedulerKeys) {
+    private fire<Event extends ScheduleKey>(event: Event) {
         this.emit(event);
-        this.emit("FIRE", event);
+        this.emit(Scheduler.FIRE, event);
 
-        const config = this.configs.get(event) ?? Scheduler.throw(event, "[config] cannot be null");
+        const config = this.configs.get(event) ?? throwError(event, "No config saved for this event");
         this.schedule(event, config);
     }
 }
